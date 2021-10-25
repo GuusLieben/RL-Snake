@@ -44,7 +44,7 @@ LEFT = 3
 
 env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2, n_snakes=1, n_foods=1)
 
-training = bool(properties['train'])
+training = properties['train'] in ['True', 'true', 'TrUe']
 if training:
     model = DQN('MlpPolicy', env,
                 learning_rate=float(properties['learning_rate']),
