@@ -23,8 +23,12 @@ if len(args) > 1:
     
 if len(args) > 2:
     steps = int(args[2])
+    
+
 
 grid_size = 12
+if len(args) > 3:
+    grid_size = int(args[3])
 
 NOMOVE = -1
 UP = 0
