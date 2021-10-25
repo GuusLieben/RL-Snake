@@ -48,7 +48,7 @@ env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2)
 obs = env.reset()  # construct instance of game
 done = False
 while ~done:
-    env.render()
+    env.render(frame_speed=.05)
     x_snek, y_snek = get_object(obs, HEAD)
     x_apple, y_apple = get_object(obs, APPLE)
     obs, reward, done, info = env.step(make_move(x_snek, y_snek, x_apple, y_apple, obs))  # pass action to step()

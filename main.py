@@ -22,7 +22,7 @@ obs = env.reset()  # construct instance of game
 done = False
 for i in range(30):
     if not done:
-        env.render()
+        env.render(frame_speed=.05)
         #action = [DOWN, DOWN]  # *normal* multi-player snake: all snakes move at the same time and you receive a list of rewards
         action = DOWN  # turn-based multi-player snake: one snake moves, other snakes don't move
         obs, reward, done, info = env.step(action)  # reward is for the snake that has moved
