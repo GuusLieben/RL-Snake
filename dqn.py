@@ -13,6 +13,17 @@ from stable_baselines import DQN
 import warnings
 warnings.filterwarnings('ignore')
 
+import sys
+args = sys.argv  # a list of the arguments provided (str)
+
+mode = 'load'
+steps = 30
+if len(args) > 1:
+    mode = args[1]
+    
+if len(args) > 2:
+    steps = int(args[2])
+
 grid_size = 12
 
 NOMOVE = -1
@@ -23,7 +34,7 @@ LEFT = 3
 
 env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2, n_snakes=1, n_foods=1)
 
-training = True
+training =  mode == 'train' or mode == 'training' or mode == 'r'
 if training:
     model = DQN('MlpPolicy', env, verbose=1, tensorboard_log='tensorboard_logs/snake_dqn/')
     model.learn(total_timesteps=400_000)
@@ -34,7 +45,7 @@ else:
 
 obs = env.reset()  # construct instance of game
 done = False
-for i in range(30):
+for i in range(steps):
     if not done:
         action, state = model.predict(obs)
         obs, reward, done, info = env.step(action)  # reward is for the snake that has moved
