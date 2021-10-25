@@ -23,7 +23,8 @@ properties = {
     'double_q': 'True',
     'grid_size': '6',
     'exploration_factor': '0.1',
-    'exploration_min': '0.02'
+    'exploration_min': '0.02',
+    'total_steps': '400000'
 }
 for arg in args:
     if arg.__contains__('='):
@@ -44,16 +45,19 @@ LEFT = 3
 
 env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2, n_snakes=1, n_foods=1)
 
-training = properties['train'] in ['True', 'true', 'TrUe']
+def is_true(arg):
+    return arg in ['True', 'true']
+
+training = is_true(properties['train'])
 if training:
     model = DQN('MlpPolicy', env,
                 learning_rate=float(properties['learning_rate']),
                 verbose=1,
-                double_q=bool(properties['double_q']),
+                double_q=is_true(properties['double_q']),
                 tensorboard_log='tensorboard_logs/snake_dqn/',
                 exploration_final_eps=float(properties['exploration_min']),
                 exploration_fraction=float(properties['exploration_factor']))
-    model.learn(total_timesteps=400_000)
+    model.learn(total_timesteps=int(properties['total_steps']))
     model.save('learned_models/snake_dqn')
 else:
     model = DQN.load('learned_models/snake_dqn')
