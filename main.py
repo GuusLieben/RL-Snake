@@ -9,9 +9,7 @@ import gym
 #import gym_snake  # don't use the registered snake
 from gym_snake.envs.snake_env import SnakeEnv
 
-log = logging.getLogger("miniproject_snake")
-log.setLevel(logging.INFO)
-log.addHandler(logging.StreamHandler())
+grid_size = 12
 
 NOMOVE = -1
 UP = 0
@@ -19,7 +17,7 @@ RIGHT = 1
 DOWN = 2
 LEFT = 3
 
-env = SnakeEnv(grid_size=[9, 9], snake_size=2, n_snakes=1, n_foods=1)
+env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2, n_snakes=1, n_foods=1)
 obs = env.reset()  # construct instance of game
 done = False
 for i in range(30):

@@ -9,7 +9,7 @@ import gym
 #import gym_snake  # don't use the registered snake
 from gym_snake.envs.snake_env import SnakeEnv
 
-grid_size = 9
+grid_size = 12
 
 # actions
 UP = 0
@@ -43,7 +43,6 @@ def make_move(x_snek, y_snek, x_apple, y_apple, matrix):
         if x_snek == 1 and y_snek != grid_size - 1:
             return DOWN
         return LEFT
-
 
 env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2)
 obs = env.reset()  # construct instance of game
