@@ -23,7 +23,7 @@ LEFT = 3
 
 env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2, n_snakes=1, n_foods=1)
 
-training = False
+training = True
 if training:
     model = DQN('MlpPolicy', env, verbose=1, tensorboard_log='tensorboard_logs/snake_dqn/')
     model.learn(total_timesteps=400_000)
