@@ -21,9 +21,11 @@ class Controller():
         assert snake_size < grid_size[1]//2
         assert unit_gap >= 0 and unit_gap < unit_size
 
+        self.grid_size = grid_size[0] * grid_size[1]
         self.snakes_remaining = n_snakes
         self.grid = Grid(grid_size, unit_size, unit_gap)
         self.HEAD_COLOR_DIFF = 125
+        self.steps = 0
 
         self.snakes = []
         self.dead_snakes = []
@@ -70,7 +72,7 @@ class Controller():
         snake = self.snakes[snake_idx]
         if type(snake) == type(None):
             return 0
-        
+
         # Check for death of snake
         if self.grid.check_death(snake.head):
             self.dead_snakes[snake_idx] = self.snakes[snake_idx]
@@ -102,13 +104,19 @@ class Controller():
 
         self.grid.connect(snake.body[-1], snake.head, self.grid.BODY_COLOR)
 
-        return reward
+        if reward is 1:
+            self.steps = 0
+        else:
+            self.steps += 1
+
+        penalty = (1 / self.grid_size) * self.steps
+        return reward - penalty
 
     def kill_snake(self, snake_idx):
         """
         Deletes snake from game and subtracts from the snake_count 
         """
-        
+
         assert self.dead_snakes[snake_idx] is not None
         self.grid.erase(self.dead_snakes[snake_idx].head)
         self.grid.erase_snake_body(self.dead_snakes[snake_idx])
@@ -134,7 +142,7 @@ class Controller():
 
         # old code: if type(directions) == type(int())
         # apparently changes from int to np.int64 using Tensorflow and to np.int32 using PyTorch after 1st step?
-        if type(directions) == type(np.int32()) or type(directions) == type(np.int64()) or type(directions) == type(int()):  
+        if type(directions) == type(np.int32()) or type(directions) == type(np.int64()) or type(directions) == type(int()):
             directions = [directions]
 
         for i, direction in enumerate(directions):
