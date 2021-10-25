@@ -97,20 +97,14 @@ class Controller():
             reward = 1
             self.grid.new_food()
         else:
-            reward = 0
+            reward = (1 / self.grid_size)
             empty_coord = snake.body.popleft()
             self.grid.connect(empty_coord, snake.body[0], self.grid.SPACE_COLOR)
             self.grid.draw(snake.head, snake.head_color)
 
         self.grid.connect(snake.body[-1], snake.head, self.grid.BODY_COLOR)
 
-        if reward is 1:
-            self.steps = 0
-        else:
-            self.steps += 1
-
-        penalty = (1 / self.grid_size) * self.steps
-        return reward - penalty
+        return reward
 
     def kill_snake(self, snake_idx):
         """
