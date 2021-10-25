@@ -28,5 +28,5 @@ for i in range(30):
         #action = [DOWN, DOWN]  # *normal* multi-player snake: all snakes move at the same time and you receive a list of rewards
         action = DOWN  # turn-based multi-player snake: one snake moves, other snakes don't move
         obs, reward, done, info = env.step(action)  # reward is for the snake that has moved
-        print("reward: {reward: .0f}".format(reward=reward))
+
 env.close()
