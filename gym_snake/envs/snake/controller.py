@@ -86,7 +86,7 @@ class Controller():
             if not head_head_collison:
                 self.grid.cover(snake.head, snake.head_color) # Avoid miscount of grid.open_space
             self.grid.connect(snake.body.popleft(), snake.body[0], self.grid.SPACE_COLOR)
-            reward = -1
+            reward = -10
         # Check for reward
         elif self.grid.food_space(snake.head):
             self.grid.draw(snake.body[0], self.grid.BODY_COLOR) # Redraw tail

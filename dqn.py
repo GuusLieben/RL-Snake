@@ -21,7 +21,9 @@ properties = {
     'steps': '30',
     'learning_rate': '0.001',
     'double_q': 'True',
-    'grid_size': '6'
+    'grid_size': '6',
+    'exploration_factor': '0.1',
+    'exploration_min': '0.02'
 }
 for arg in args:
     if arg.__contains__('='):
@@ -48,12 +50,13 @@ if training:
                 learning_rate=float(properties['learning_rate']),
                 verbose=1,
                 double_q=bool(properties['double_q']),
-                tensorboard_log='tensorboard_logs/snake_dqn/')
+                tensorboard_log='tensorboard_logs/snake_dqn/',
+                exploration_final_eps=float(properties['exploration_min']),
+                exploration_fraction=float(properties['exploration_factor']))
     model.learn(total_timesteps=400_000)
     model.save('learned_models/snake_dqn')
 else:
     model = DQN.load('learned_models/snake_dqn')
-
 
 obs = env.reset()
 done = False
@@ -61,5 +64,6 @@ for i in range(int(properties['steps'])):
     if not done:
         action, state = model.predict(obs)
         obs, reward, done, info = env.step(action)
-        env.render(frame_speed=.05)
+        if not training:
+            env.render()
 env.close()
