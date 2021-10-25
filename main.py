@@ -19,16 +19,14 @@ RIGHT = 1
 DOWN = 2
 LEFT = 3
 
-#env = SnakeEnv(grid_size=[12, 12], snake_size=2, n_snakes=3, n_foods=3)
-env = SnakeEnv(grid_size=[9, 9], snake_size=2, n_snakes=2, n_foods=2)
+env = SnakeEnv(grid_size=[9, 9], snake_size=2, n_snakes=1, n_foods=1)
 obs = env.reset()  # construct instance of game
 done = False
-log.info("start game")
 for i in range(30):
     if not done:
         env.render()
         #action = [DOWN, DOWN]  # *normal* multi-player snake: all snakes move at the same time and you receive a list of rewards
         action = DOWN  # turn-based multi-player snake: one snake moves, other snakes don't move
         obs, reward, done, info = env.step(action)  # reward is for the snake that has moved
-        log.info("reward: %.0f", reward)
+        print("reward: {reward: .0f}".format(reward=reward))
 env.close()
