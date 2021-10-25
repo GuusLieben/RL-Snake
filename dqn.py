@@ -14,21 +14,25 @@ import warnings
 warnings.filterwarnings('ignore')
 
 import sys
-args = sys.argv  # a list of the arguments provided (str)
+args = sys.argv
 
-mode = 'load'
-steps = 30
-if len(args) > 1:
-    mode = args[1]
-    
-if len(args) > 2:
-    steps = int(args[2])
-    
+properties = {
+    'train': 'True',
+    'steps': '30',
+    'learning_rate': '0.001',
+    'double_q': 'True',
+    'grid_size': '6'
+}
+for arg in args:
+    if arg.__contains__('='):
+        kv = arg.split('=')
+        properties[kv[0]] = kv[1]
 
+print('Using properties:')
+for prop_k, prop_v in properties.items():
+    print('- ', prop_k, ':', prop_v)
 
-grid_size = 12
-if len(args) > 3:
-    grid_size = int(args[3])
+grid_size = int(properties['grid_size'])
 
 NOMOVE = -1
 UP = 0
@@ -38,23 +42,24 @@ LEFT = 3
 
 env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2, n_snakes=1, n_foods=1)
 
-training =  mode == 'train' or mode == 'training' or mode == 'r'
+training = bool(properties['train'])
 if training:
-    model = DQN('MlpPolicy', env, verbose=1, tensorboard_log='tensorboard_logs/snake_dqn/')
+    model = DQN('MlpPolicy', env,
+                learning_rate=float(properties['learning_rate']),
+                verbose=1,
+                double_q=bool(properties['double_q']),
+                tensorboard_log='tensorboard_logs/snake_dqn/')
     model.learn(total_timesteps=400_000)
     model.save('learned_models/snake_dqn')
 else:
     model = DQN.load('learned_models/snake_dqn')
 
 
-obs = env.reset()  # construct instance of game
+obs = env.reset()
 done = False
-for i in range(steps):
+for i in range(int(properties['steps'])):
     if not done:
         action, state = model.predict(obs)
-        obs, reward, done, info = env.step(action)  # reward is for the snake that has moved
+        obs, reward, done, info = env.step(action)
         env.render(frame_speed=.05)
-        #action = [DOWN, DOWN]  # *normal* multi-player snake: all snakes move at the same time and you receive a list of rewards
-        # action = DOWN  # turn-based multi-player snake: one snake moves, other snakes don't move
-
 env.close()
