@@ -25,7 +25,6 @@ class Controller():
         self.snakes_remaining = n_snakes
         self.grid = Grid(grid_size, unit_size, unit_gap)
         self.HEAD_COLOR_DIFF = 125
-        self.steps = 0
 
         self.snakes = []
         self.dead_snakes = []
@@ -88,7 +87,7 @@ class Controller():
             if not head_head_collison:
                 self.grid.cover(snake.head, snake.head_color) # Avoid miscount of grid.open_space
             self.grid.connect(snake.body.popleft(), snake.body[0], self.grid.SPACE_COLOR)
-            reward = -10
+            reward = -1
         # Check for reward
         elif self.grid.food_space(snake.head):
             self.grid.draw(snake.body[0], self.grid.BODY_COLOR) # Redraw tail
@@ -103,14 +102,8 @@ class Controller():
             self.grid.draw(snake.head, snake.head_color)
 
         self.grid.connect(snake.body[-1], snake.head, self.grid.BODY_COLOR)
-
-        if reward is 1:
-            self.steps = 0
-        else:
-            self.steps += 1
-
-        penalty = (1 / self.grid_size) * self.steps
-        return reward - penalty
+         
+        return reward
 
     def kill_snake(self, snake_idx):
         """

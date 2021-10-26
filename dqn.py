@@ -22,8 +22,9 @@ properties = {
     'learning_rate': '0.001',
     'double_q': 'True',
     'grid_size': '6',
-    'exploration_factor': '0.1',
-    'exploration_min': '0.02'
+    'exploration_factor': '0.2',
+    'exploration_min': '0.02',
+    'prioritized_replay': 'True',
 }
 for arg in args:
     if arg.__contains__('='):
@@ -52,8 +53,10 @@ if training:
                 double_q=bool(properties['double_q']),
                 tensorboard_log='tensorboard_logs/snake_dqn/',
                 exploration_final_eps=float(properties['exploration_min']),
-                exploration_fraction=float(properties['exploration_factor']))
-    model.learn(total_timesteps=400_000)
+                exploration_fraction=float(properties['exploration_factor']),
+                prioritized_replay=properties['train']=='True'
+    )
+    model.learn(total_timesteps=1000000)
     model.save('learned_models/snake_dqn')
 else:
     model = DQN.load('learned_models/snake_dqn')
