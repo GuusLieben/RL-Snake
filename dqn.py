@@ -22,9 +22,10 @@ properties = {
     'learning_rate': '0.001',
     'double_q': 'True',
     'grid_size': '6',
-    'exploration_factor': '0.2',
+    'exploration_factor': '0.1',
     'exploration_min': '0.02',
-    'prioritized_replay': 'True',
+    'total_steps': '400000',
+    'load_model': None
 }
 for arg in args:
     if arg.__contains__('='):
@@ -35,6 +36,11 @@ print('Using properties:')
 for prop_k, prop_v in properties.items():
     print('- ', prop_k, ':', prop_v)
 
+
+def is_true(arg):
+    return arg in ['True', 'true']
+
+
 grid_size = int(properties['grid_size'])
 
 NOMOVE = -1
@@ -44,22 +50,23 @@ DOWN = 2
 LEFT = 3
 
 env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2, n_snakes=1, n_foods=1)
+training = is_true(properties['train'])
 
-training = properties['train'] in ['True', 'true', 'TrUe']
+if not training and properties['load_model'] is None:
+    raise 'Training mode is disabled but no existing model was defined'
+
 if training:
     model = DQN('MlpPolicy', env,
                 learning_rate=float(properties['learning_rate']),
                 verbose=1,
-                double_q=bool(properties['double_q']),
+                double_q=is_true(properties['double_q']),
                 tensorboard_log='tensorboard_logs/snake_dqn/',
                 exploration_final_eps=float(properties['exploration_min']),
-                exploration_fraction=float(properties['exploration_factor']),
-                prioritized_replay=properties['train']=='True'
-    )
-    model.learn(total_timesteps=1000000)
-    model.save('learned_models/snake_dqn')
+                exploration_fraction=float(properties['exploration_factor']))
+    model.learn(total_timesteps=int(properties['total_steps']))
+    model.save('learned_models/last_dqn')
 else:
-    model = DQN.load('learned_models/snake_dqn')
+    model = DQN.load('learned_models/' + properties['load_model'])
 
 obs = env.reset()
 done = False
