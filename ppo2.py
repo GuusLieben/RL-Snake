@@ -11,7 +11,8 @@ properties = {
     'train': 'True',
     'steps': '200',
     'grid_size': '6',
-    'n_steps': '128'
+    'n_steps': '128',
+    'load_model': None
 }
 
 for arg in sys.argv:
@@ -27,19 +28,23 @@ for prop_k, prop_v in properties.items():
 
 # -------- <MODEL TRAINING> -------- #
 grid_size = int(properties['grid_size'])
-env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2, n_snakes=1, n_foods=1)
+env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2, n_snakes=1, n_foods=3)
 
-if properties['train'] == 'True':
+training = properties['train'] == 'True'
+
+if not training and properties['load_model'] is None:
+    raise 'Training mode is disabled but no existing model was defined'
+
+if training:
     model = PPO2('MlpPolicy', env,
                  verbose=1,
                  tensorboard_log="tensorboard_logs/snake_dqn/",
                  n_steps=int(properties['n_steps'])
     )
-    model.learn(10000000)
+    model.learn(1000000)
     model.save('learned_models/snake_ppo2')
 else:
-    #model = PPO2.load('learned_models/snake_ppo2')
-    model = PPO2.load('learned_models/snake_ppo2_10000000')
+    model = PPO2.load('learned_models/' + properties['load_model'])
 # -------- </MODEL TRAINING> -------- #
 
 
