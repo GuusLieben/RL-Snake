@@ -35,7 +35,8 @@ if properties['train'] == 'True':
     model.learn(10000000)
     model.save('learned_models/snake_ppo2')
 else:
-    model = PPO2.load('learned_models/snake_ppo2')
+    #model = PPO2.load('learned_models/snake_ppo2')
+    model = PPO2.load('learned_models/snake_ppo2_10000000')
 # -------- </MODEL TRAINING> -------- #
 
 
