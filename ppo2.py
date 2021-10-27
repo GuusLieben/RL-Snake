@@ -12,7 +12,8 @@ properties = {
     'steps': '200',
     'grid_size': '6',
     'n_steps': '128',
-    'load_model': None
+    'load_model': None,
+    'apples': 1
 }
 
 for arg in sys.argv:
@@ -28,7 +29,7 @@ for prop_k, prop_v in properties.items():
 
 # -------- <MODEL TRAINING> -------- #
 grid_size = int(properties['grid_size'])
-env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2, n_snakes=1, n_foods=3)
+env = SnakeEnv(grid_size=[grid_size, grid_size], snake_size=2, n_snakes=1, n_foods=int(properties['apples']))
 
 training = properties['train'] == 'True'
 
